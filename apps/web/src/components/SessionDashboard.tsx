@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import type { Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow } from "@/lib/types";
@@ -102,9 +101,6 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
     <main className="app-frame">
       <div className="shell stack">
         <div className="row">
-          <Link href="/" className="button secondary" style={{ textDecoration: "none" }}>
-            ← Back to home
-          </Link>
           <button className="button secondary" onClick={() => setRefreshKey((key) => key + 1)} disabled={loading}>
             {loading ? "Refreshing..." : "Refresh data"}
           </button>
