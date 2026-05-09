@@ -1,0 +1,12 @@
+{
+  "title": "Bike Lanes vs Business Access",
+  "description": "A corridor redesign would replace curb parking with protected bike lanes.",
+  "participants": [
+    {"id": "p1", "name": "Iris", "statement": "Protected bike lanes will make the street safer and reduce car dependency."},
+    {"id": "p2", "name": "Dev", "statement": "Removing curb parking will hurt shops because customers need quick access."},
+    {"id": "p3", "name": "Cam", "statement": "Traffic violence is a safety issue, and bike lanes are a proven solution."},
+    {"id": "p4", "name": "Lena", "statement": "I support safer streets, but accessible drop-off zones must remain nearby."},
+    {"id": "p5", "name": "Ravi", "statement": "The city should publish data about loading demand before construction."},
+    {"id": "p6", "name": "Tess", "statement": "Business owners feel ignored when street changes are announced late."}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Campus Parking Fee Increase",
+  "description": "A university is considering higher parking fees to fund transit subsidies.",
+  "participants": [
+    {"id": "p1", "name": "Alex", "statement": "Higher parking fees can fund better bus passes and reduce traffic."},
+    {"id": "p2", "name": "Morgan", "statement": "Commuter students already pay too much and need affordable parking."},
+    {"id": "p3", "name": "Jules", "statement": "Transit subsidies help students who cannot afford cars."},
+    {"id": "p4", "name": "Riley", "statement": "Night students need safe and reliable ways to get home."},
+    {"id": "p5", "name": "Taylor", "statement": "The campus never listens to commuters before raising fees."},
+    {"id": "p6", "name": "Casey", "statement": "A lower-income exemption could make the policy fairer."}
+  ]
+}

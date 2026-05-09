@@ -1,0 +1,18 @@
+{
+  "title": "Affordable Housing vs Parking",
+  "description": "A city is debating whether to convert a public parking lot into affordable housing.",
+  "participants": [
+    {"id": "p1", "name": "Maya", "statement": "We need affordable housing more than another parking lot. Public land should serve people who need homes."},
+    {"id": "p2", "name": "Jordan", "statement": "Removing parking will hurt small businesses that rely on customer access."},
+    {"id": "p3", "name": "Luis", "statement": "Housing near transit can reduce car dependency and help the climate."},
+    {"id": "p4", "name": "Evelyn", "statement": "I support housing, but elderly residents still need accessible parking nearby."},
+    {"id": "p5", "name": "Priya", "statement": "The city never listens to renters. Affordable homes should be the priority."},
+    {"id": "p6", "name": "Owen", "statement": "Business owners are worried because customers need easy parking for short trips."},
+    {"id": "p7", "name": "Nora", "statement": "A mixed-use building could include loading zones, accessible spaces, and better transit passes."},
+    {"id": "p8", "name": "Sam", "statement": "Before removing parking, we need data on how full the lot is and who uses it."},
+    {"id": "p9", "name": "Aisha", "statement": "Public land should address the housing crisis, not store private cars."},
+    {"id": "p10", "name": "Ben", "statement": "The shops already struggle, and less parking would make the area harder to visit."},
+    {"id": "p11", "name": "Grace", "statement": "Transit access matters, but the plan must protect disabled residents and caregivers."},
+    {"id": "p12", "name": "Marco", "statement": "I support more homes if the city proves the parking impact will be managed."}
+  ]
+}

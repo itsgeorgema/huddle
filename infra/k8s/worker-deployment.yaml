@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: huddle-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: huddle-worker
+  template:
+    metadata:
+      labels:
+        app: huddle-worker
+    spec:
+      containers:
+        - name: worker
+          image: huddle-api:latest
+          command: ["celery", "-A", "app.workers.celery_app", "worker", "--loglevel=info"]

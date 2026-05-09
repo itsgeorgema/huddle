@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: huddle-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: huddle-web
+  template:
+    metadata:
+      labels:
+        app: huddle-web
+    spec:
+      containers:
+        - name: web
+          image: huddle-web:latest
+          ports:
+            - containerPort: 3000

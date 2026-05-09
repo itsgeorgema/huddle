@@ -1,0 +1,12 @@
+{
+  "title": "School Phone Ban",
+  "description": "A school board is debating whether phones should be banned during the school day.",
+  "participants": [
+    {"id": "p1", "name": "Dana", "statement": "A phone ban would help students focus and improve learning."},
+    {"id": "p2", "name": "Noah", "statement": "Students need phones for safety and family emergencies."},
+    {"id": "p3", "name": "Mina", "statement": "Teachers need a clear policy because enforcement is inconsistent."},
+    {"id": "p4", "name": "Eli", "statement": "The school should not punish students who need accessibility tools."},
+    {"id": "p5", "name": "Fern", "statement": "Parents do not trust the district to handle emergencies well."},
+    {"id": "p6", "name": "Theo", "statement": "Maybe phones can be stored during class but available during lunch."}
+  ]
+}
