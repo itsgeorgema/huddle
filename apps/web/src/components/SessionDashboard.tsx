@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
 import type { Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow } from "@/lib/types";
@@ -25,6 +26,8 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [simulating, setSimulating] = useState(false);
+  const [showAllParticipants, setShowAllParticipants] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -59,7 +62,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
     return () => {
       active = false;
     };
-  }, [sessionId]);
+  }, [sessionId, refreshKey]);
 
   const participantNames = useMemo(
     () => Object.fromEntries(participants.map((participant) => [participant.id, participant.display_name])),
@@ -84,6 +87,14 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   return (
     <main className="app-frame">
       <div className="shell stack">
+        <div className="row">
+          <Link href="/" className="button secondary" style={{ textDecoration: "none" }}>
+            ← Back to home
+          </Link>
+          <button className="button secondary" onClick={() => setRefreshKey((key) => key + 1)} disabled={loading}>
+            {loading ? "Refreshing..." : "Refresh data"}
+          </button>
+        </div>
         <section className="hero compact">
           <div className="hero-copy">
             <p className="eyebrow">Public deliberation docket</p>
@@ -138,14 +149,19 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
               {loading ? (
                 <Skeleton count={6} />
               ) : participants.length ? (
-                <div className="participant-list">
-                  {participants.slice(0, 8).map((participant, index) => (
-                    <div className="participant-chip" key={participant.id}>
-                      <span className="node-dot">{index + 1}</span>
-                      <span>{participant.display_name}</span>
-                    </div>
-                  ))}
-                </div>
+                <>
+                  <div className="participant-list">
+                    {participants.slice(0, 8).map((participant, index) => (
+                      <div className="participant-chip" key={participant.id}>
+                        <span className="node-dot">{index + 1}</span>
+                        <span>{participant.display_name}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button className="button secondary" onClick={() => setShowAllParticipants(true)}>
+                    Show all participants
+                  </button>
+                </>
               ) : (
                 <div className="empty-state">No participants are attached to this session.</div>
               )}
@@ -316,6 +332,52 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
           </div>
         </section>
       </div>
+
+      {showAllParticipants && (
+        <div
+          onClick={() => setShowAllParticipants(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+            padding: "24px"
+          }}
+        >
+          <div
+            onClick={(event) => event.stopPropagation()}
+            className="panel stack"
+            style={{
+              maxWidth: "640px",
+              width: "100%",
+              maxHeight: "80vh",
+              overflowY: "auto",
+              background: "white"
+            }}
+          >
+            <div className="spread">
+              <div>
+                <p className="eyebrow">Participants</p>
+                <h2 style={{ margin: 0 }}>All participants ({participants.length})</h2>
+              </div>
+              <button className="button secondary" onClick={() => setShowAllParticipants(false)}>
+                Close
+              </button>
+            </div>
+            {participants.map((participant) => (
+              <article className="panel" key={participant.id}>
+                <strong>{participant.display_name}</strong>
+                {participant.statement && (
+                  <p className="muted" style={{ margin: "4px 0 0" }}>{participant.statement}</p>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
