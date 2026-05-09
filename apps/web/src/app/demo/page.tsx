@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
@@ -35,6 +36,11 @@ export default function DemoPage() {
   return (
     <main className="app-frame">
       <div className="shell stack">
+        <div className="row">
+          <Link href="/" className="button secondary" style={{ textDecoration: "none" }}>
+            ← Back to home
+          </Link>
+        </div>
         <section className="hero compact">
           <div className="hero-copy">
             <p className="eyebrow">Scenario intake</p>
