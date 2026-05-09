@@ -30,33 +30,72 @@ export default function DemoPage() {
     }
   }
 
+  const selectedScenario = scenarios.find((scenario) => scenario.id === selected);
+
   return (
-    <main className="shell stack">
-      <section className="panel stack">
-        <h1>Huddle</h1>
-        <p className="muted">Load a scenario and run the AI deliberation pipeline end to end.</p>
-        <div className="row">
-          <select value={selected} onChange={(event) => setSelected(event.target.value)}>
-            {scenarios.map((scenario) => (
-              <option key={scenario.id} value={scenario.id}>
-                {scenario.title}
-              </option>
-            ))}
-          </select>
-          <button className="button" onClick={load} disabled={loading || scenarios.length === 0}>
-            {loading ? "Running pipeline..." : "Load Scenario and Analyze"}
-          </button>
-        </div>
-        {error && <p style={{ color: "#b42318" }}>{error}</p>}
-      </section>
-      <section className="grid three">
-        {scenarios.map((scenario) => (
-          <article className="panel" key={scenario.id}>
-            <h3>{scenario.title}</h3>
-            <p className="muted">{scenario.description}</p>
-          </article>
-        ))}
-      </section>
+    <main className="app-frame">
+      <div className="shell stack">
+        <section className="hero compact">
+          <div className="hero-copy">
+            <p className="eyebrow">Scenario intake</p>
+            <h1>Demo docket</h1>
+            <p>
+              Load a civic scenario, run the analysis pipeline, and inspect how Huddle balances conflict, diversity,
+              and bridge capacity.
+            </p>
+          </div>
+          <div className="panel dark stack">
+            <p className="eyebrow">Analyze a record</p>
+            <label className="stack tight">
+              <span>Scenario</span>
+              <select value={selected} onChange={(event) => setSelected(event.target.value)}>
+                {scenarios.map((scenario) => (
+                  <option key={scenario.id} value={scenario.id}>
+                    {scenario.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="muted">{selectedScenario?.description || "Choose a scenario to start the pipeline."}</p>
+            <button className="button" onClick={load} disabled={loading || scenarios.length === 0}>
+              {loading ? "Running pipeline..." : "Load and analyze"}
+            </button>
+            {error && <p className="error-state">{error}</p>}
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Available records</p>
+              <h2>Choose the public issue to route</h2>
+            </div>
+            <p>Each card represents a ready-made record with participants, claims, and tensions for the demo pipeline.</p>
+          </div>
+          {scenarios.length ? (
+            <div className="grid scenario-grid">
+              {scenarios.map((scenario) => (
+                <article className={`panel scenario-card ${selected === scenario.id ? "selected" : ""}`} key={scenario.id}>
+                  <div>
+                    <p className="eyebrow">{selected === scenario.id ? "Selected" : "Scenario"}</p>
+                    <h3>{scenario.title}</h3>
+                    <p className="muted">{scenario.description}</p>
+                  </div>
+                  <button className="button secondary" onClick={() => setSelected(scenario.id)}>
+                    Select record
+                  </button>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="skeleton stack">
+              <div className="skeleton-line short" />
+              <div className="skeleton-line" />
+              <div className="skeleton-line medium" />
+            </div>
+          )}
+        </section>
+      </div>
     </main>
   );
 }
