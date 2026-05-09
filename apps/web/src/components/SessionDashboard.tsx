@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
-import type { Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow } from "@/lib/types";
+import type { AgentRun, Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow } from "@/lib/types";
 import { ConflictGraph } from "./ConflictGraph";
 
 const stages = ["Intake", "Claim extraction", "Conflict graph", "Load balancing", "Mediation briefs"];
@@ -38,6 +37,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [simulating, setSimulating] = useState(false);
+  const [agentRuns, setAgentRuns] = useState<AgentRun[]>([]);
   const [showAllParticipants, setShowAllParticipants] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -54,9 +54,10 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
       api.graph(sessionId),
       api.groups(sessionId),
       api.briefs(sessionId),
-      api.risk(sessionId)
+      api.risk(sessionId),
+      api.agentRuns(sessionId),
     ])
-      .then(([status, participantData, graphData, groupData, briefData, riskData]) => {
+      .then(([status, participantData, graphData, groupData, briefData, riskData, agentRunData]) => {
         if (!active) return;
         setSteps(status.steps);
         setParticipants(participantData);
@@ -64,6 +65,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
         setGroups(groupData);
         setBriefs(briefData);
         setRisk(riskData);
+        setAgentRuns(agentRunData);
       })
       .catch((err) => {
         if (!active) return;
@@ -101,14 +103,6 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   return (
     <main className="app-frame">
       <div className="shell stack">
-        <div className="row">
-          <Link href="/" className="button secondary" style={{ textDecoration: "none" }}>
-            ← Back to home
-          </Link>
-          <button className="button secondary" onClick={() => setRefreshKey((key) => key + 1)} disabled={loading}>
-            {loading ? "Refreshing..." : "Refresh data"}
-          </button>
-        </div>
         <section className="hero compact">
           <div className="hero-copy">
             <p className="eyebrow anim-up" data-anim-index="1">Public deliberation docket</p>
@@ -120,6 +114,9 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
             <div className="row anim-up" data-anim-index="4">
               <a className="button" href="#routing">Review group routing</a>
               <a className="button secondary" href="#graph">Inspect conflict graph</a>
+              <button className="button secondary" onClick={() => setRefreshKey((key) => key + 1)} disabled={loading}>
+                {loading ? "Refreshing..." : "Refresh data"}
+              </button>
             </div>
           </div>
 
@@ -348,6 +345,26 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
             })}
           </div>
         </section>
+
+        {/* Agent transcript */}
+        <section className="section" data-reveal>
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">Agent transcript</p>
+              <h2>How the pipeline made its decisions</h2>
+            </div>
+            <p>Full input and output for each agent run — the unedited reasoning trail from intake to mediation.</p>
+          </div>
+          {agentRuns.length ? (
+            <div className="stack">
+              {agentRuns.map((run) => (
+                <AgentRunCard key={run.id} run={run} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">No agent runs recorded for this session.</div>
+          )}
+        </section>
       </div>
 
       {showAllParticipants && (
@@ -463,6 +480,55 @@ function Skeleton({ count }: { count: number }) {
           key={index}
         />
       ))}
+    </div>
+  );
+}
+
+const AGENT_LABELS: Record<string, string> = {
+  intake: "Intake Agent",
+  claim_extraction: "Claim Extraction Agent",
+  conflict_classification: "Conflict Classifier",
+  participant_profiling: "Participant Profiler",
+  diversity_load_balancing: "Diversity Load Balancer",
+  pre_mediation: "Pre-Mediation Briefer",
+  consensus_summary: "Consensus Summarizer",
+};
+
+function AgentRunCard({ run }: { run: AgentRun }) {
+  const [open, setOpen] = useState(false);
+  const label = AGENT_LABELS[run.agent_name] ?? run.agent_name;
+
+  return (
+    <div className="panel agent-run-card">
+      <button className="agent-run-header" onClick={() => setOpen((v) => !v)}>
+        <div className="agent-run-meta">
+          <span className={`badge ${run.status === "complete" ? "seal" : run.status === "failed" ? "danger" : ""}`}>
+            {run.status}
+          </span>
+          <strong style={{ fontSize: "0.95rem" }}>{label}</strong>
+        </div>
+        <div className="agent-run-right">
+          {run.latency_ms > 0 && (
+            <span className="latency">{Math.round(run.latency_ms)}ms</span>
+          )}
+          <span className="agent-run-toggle">{open ? "−" : "+"}</span>
+        </div>
+      </button>
+      {run.error && (
+        <p className="error-state" style={{ margin: "0.5rem 0 0" }}>{run.error}</p>
+      )}
+      {open && (
+        <div className="agent-run-body">
+          <details open>
+            <summary className="eyebrow" style={{ cursor: "pointer", userSelect: "none" }}>Input</summary>
+            <pre className="agent-json">{JSON.stringify(run.input_json, null, 2)}</pre>
+          </details>
+          <details>
+            <summary className="eyebrow" style={{ cursor: "pointer", userSelect: "none" }}>Output</summary>
+            <pre className="agent-json">{JSON.stringify(run.output_json, null, 2)}</pre>
+          </details>
+        </div>
+      )}
     </div>
   );
 }

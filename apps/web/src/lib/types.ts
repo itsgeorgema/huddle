@@ -54,3 +54,13 @@ export type RiskRow = {
   risk_score: number;
   reason: string;
 };
+
+export type AgentRun = {
+  id: string;
+  agent_name: string;
+  status: string;
+  input_json: Record<string, unknown>;
+  output_json: Record<string, unknown>;
+  latency_ms: number;
+  error?: string | null;
+};

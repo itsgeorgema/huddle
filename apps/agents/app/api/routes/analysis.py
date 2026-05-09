@@ -27,6 +27,27 @@ def analyze_queued(session_id: str, payload: AnalyzeRequest, db: Session = Depen
     return {"task_id": task.id, "status": "queued"}
 
 
+@router.get("/agent-runs")
+def agent_runs(session_id: str, db: Session = Depends(get_db)) -> list[dict]:
+    if not db.get(SessionModel, session_id):
+        raise HTTPException(status_code=404, detail="Session not found")
+    runs = db.scalars(
+        select(AgentRun).where(AgentRun.session_id == session_id).order_by(AgentRun.created_at.asc())
+    ).all()
+    return [
+        {
+            "id": run.id,
+            "agent_name": run.agent_name,
+            "status": run.status,
+            "input_json": run.input_json,
+            "output_json": run.output_json,
+            "latency_ms": run.latency_ms,
+            "error": run.error,
+        }
+        for run in runs
+    ]
+
+
 @router.get("/analysis/status", response_model=PipelineStatus)
 def status(session_id: str, db: Session = Depends(get_db)) -> PipelineStatus:
     session = db.get(SessionModel, session_id)

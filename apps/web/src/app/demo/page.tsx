@@ -1,9 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import type { Scenario } from "@/lib/types";
+
+const PIPELINE_MESSAGES = [
+  "Loading scenario into the public record…",
+  "Parsing participant statements…",
+  "Normalizing tone and language…",
+  "Running intake agent…",
+  "Extracting structured claims…",
+  "Identifying stakeholder positions…",
+  "Running conflict classifier agent…",
+  "Mapping tension edges across claims…",
+  "Building participant viewpoint profiles…",
+  "Scoring bridge potential for each participant…",
+  "Running diversity load balancer…",
+  "Testing pair risk thresholds…",
+  "Assembling balanced deliberation rooms…",
+  "Running pre-mediation briefing agent…",
+  "Generating facilitator notes per group…",
+  "Summarizing consensus landscape…",
+  "Finalizing session record…",
+];
 
 function useReveal(dep?: unknown) {
   useEffect(() => {
@@ -32,12 +52,34 @@ export default function DemoPage() {
   const [selected, setSelected] = useState("housing_parking");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [msgVisible, setMsgVisible] = useState(true);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useReveal(scenarios);
 
   useEffect(() => {
     api.scenarios().then(setScenarios).catch((err) => setError(err.message));
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setMsgIndex(0);
+      setMsgVisible(true);
+      return;
+    }
+    intervalRef.current = setInterval(() => {
+      setMsgVisible(false);
+      setTimeout(() => {
+        setMsgIndex((i) => (i + 1) % PIPELINE_MESSAGES.length);
+        setMsgVisible(true);
+      }, 350);
+    }, 3000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [loading]);
 
   async function load() {
     setLoading(true);
@@ -71,26 +113,40 @@ export default function DemoPage() {
           <div className="hero-panel-offset">
           <div className="panel dark stack anim-up" data-anim-index="4">
             <p className="eyebrow">Analyze a record</p>
-            <label className="stack tight">
-              <span style={{ fontSize: "0.875rem", fontWeight: 500 }}>Scenario</span>
-              <select value={selected} onChange={(event) => setSelected(event.target.value)}>
-                {scenarios.map((scenario) => (
-                  <option key={scenario.id} value={scenario.id}>
-                    {scenario.title}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {selectedScenario?.description && (
-              <p className="muted" style={{ fontSize: "0.875rem" }}>
-                {selectedScenario.description}
-              </p>
-            )}
-            {!selectedScenario && (
-              <p className="muted" style={{ fontSize: "0.875rem" }}>Choose a scenario to start the pipeline.</p>
+            {loading ? (
+              <div className="pipeline-log">
+                <div className="pipeline-log-spinner" />
+                <p
+                  className="pipeline-log-msg"
+                  style={{ opacity: msgVisible ? 1 : 0 }}
+                >
+                  {PIPELINE_MESSAGES[msgIndex]}
+                </p>
+              </div>
+            ) : (
+              <>
+                <label className="stack tight">
+                  <span style={{ fontSize: "0.875rem", fontWeight: 500 }}>Scenario</span>
+                  <select value={selected} onChange={(event) => setSelected(event.target.value)}>
+                    {scenarios.map((scenario) => (
+                      <option key={scenario.id} value={scenario.id}>
+                        {scenario.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {selectedScenario?.description && (
+                  <p className="muted" style={{ fontSize: "0.875rem" }}>
+                    {selectedScenario.description}
+                  </p>
+                )}
+                {!selectedScenario && (
+                  <p className="muted" style={{ fontSize: "0.875rem" }}>Choose a scenario to start the pipeline.</p>
+                )}
+              </>
             )}
             <button className="button" onClick={load} disabled={loading || scenarios.length === 0}>
-              {loading ? "Running pipeline…" : "Load and analyze"}
+              {loading ? "Pipeline running…" : "Load and analyze"}
             </button>
             {error && <p className="error-state">{error}</p>}
           </div>

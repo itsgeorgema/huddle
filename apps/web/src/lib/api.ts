@@ -1,4 +1,4 @@
-import type { Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow, Scenario, Session } from "./types";
+import type { AgentRun, Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow, Scenario, Session } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -35,6 +35,7 @@ export const api = {
   groups: (sessionId: string) => request<Group[]>(`/api/sessions/${sessionId}/groups`),
   briefs: (sessionId: string) => request<Brief[]>(`/api/sessions/${sessionId}/mediation-briefs`),
   risk: (sessionId: string) => request<RiskRow[]>(`/api/sessions/${sessionId}/risk-matrix`),
+  agentRuns: (sessionId: string) => request<AgentRun[]>(`/api/sessions/${sessionId}/agent-runs`),
   simulateLive: (sessionId: string, messages: string[]) =>
     request<{ event: string; reason: string; intervention: string }>(`/api/sessions/${sessionId}/simulate-live`, {
       method: "POST",
