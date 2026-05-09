@@ -7,6 +7,12 @@
     {"id": "p3", "name": "Cam", "statement": "Traffic violence is a safety issue, and bike lanes are a proven solution."},
     {"id": "p4", "name": "Lena", "statement": "I support safer streets, but accessible drop-off zones must remain nearby."},
     {"id": "p5", "name": "Ravi", "statement": "The city should publish data about loading demand before construction."},
-    {"id": "p6", "name": "Tess", "statement": "Business owners feel ignored when street changes are announced late."}
+    {"id": "p6", "name": "Tess", "statement": "Business owners feel ignored when street changes are announced late."},
+    {"id": "p7", "name": "Hana", "statement": "I'm in a wheelchair. Curb cuts and ADA-compliant loading zones can't be afterthoughts when the street is rebuilt."},
+    {"id": "p8", "name": "Eduardo", "statement": "I run a family restaurant on this corridor. Our delivery drivers double-park as it is. Take more curb away and we'll lose dinner-rush orders."},
+    {"id": "p9", "name": "Mei", "statement": "I'm 71 and I walk this street every morning. Cars speed past me. A protected lane buffer would actually make me feel safer crossing."},
+    {"id": "p10", "name": "Jamal", "statement": "I bike to work daily. Painted lanes don't protect anyone. We need real concrete separation, not another half-measure."},
+    {"id": "p11", "name": "Sofia", "statement": "I drive the local bus on this route. Stops need clear sightlines for boarding. Any bike-lane plan has to coordinate with transit, not fight it."},
+    {"id": "p12", "name": "Beatrice", "statement": "I'm a single mom with three kids. I need to park close to drop-off and then run errands. If parking disappears, my whole morning falls apart."}
   ]
 }

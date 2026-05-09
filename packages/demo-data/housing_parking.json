@@ -13,6 +13,10 @@
     {"id": "p9", "name": "Aisha", "statement": "Public land should address the housing crisis, not store private cars."},
     {"id": "p10", "name": "Ben", "statement": "The shops already struggle, and less parking would make the area harder to visit."},
     {"id": "p11", "name": "Grace", "statement": "Transit access matters, but the plan must protect disabled residents and caregivers."},
-    {"id": "p12", "name": "Marco", "statement": "I support more homes if the city proves the parking impact will be managed."}
+    {"id": "p12", "name": "Marco", "statement": "I support more homes if the city proves the parking impact will be managed."},
+    {"id": "p13", "name": "Mrs. Tanaka", "statement": "I've owned my home on this block for 38 years. Whatever you build will affect my neighborhood for decades. Listen to long-time residents, not just new arrivals."},
+    {"id": "p14", "name": "Tyrell", "statement": "I'm 24, working two jobs, sleeping on my brother's couch. Every month a new development opens with 'affordable units' that aren't actually affordable to me. Define what 'affordable' means before celebrating."},
+    {"id": "p15", "name": "Hassan", "statement": "I drive for a rideshare. That parking lot is where I get coffee and use the restroom mid-shift. Drivers have nowhere else to go. Don't pretend gig workers don't exist in your planning."},
+    {"id": "p16", "name": "Father Russo", "statement": "Our church is across the street. Sunday service brings 200 elderly worshippers who can't take stairs to street parking. The plan needs to address us specifically."}
   ]
 }

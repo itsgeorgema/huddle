@@ -21,6 +21,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   scenarios: () => request<Scenario[]>("/api/demo/scenarios"),
   loadScenario: (id: string) => request<Session>(`/api/demo/scenarios/${id}/load`, { method: "POST" }),
+  compose: async (topic: string, file: File | null, numAiPersonas: number): Promise<Session> => {
+    const csv = file ? await file.text() : null;
+    return request<Session>("/api/demo/compose", {
+      method: "POST",
+      body: JSON.stringify({ topic, csv, num_ai_personas: numAiPersonas })
+    });
+  },
   analyze: (sessionId: string, groupSize = 4) =>
     request<{ status: string }>(`/api/sessions/${sessionId}/analyze`, {
       method: "POST",

@@ -7,6 +7,12 @@
     {"id": "p3", "name": "Jules", "statement": "Transit subsidies help students who cannot afford cars."},
     {"id": "p4", "name": "Riley", "statement": "Night students need safe and reliable ways to get home."},
     {"id": "p5", "name": "Taylor", "statement": "The campus never listens to commuters before raising fees."},
-    {"id": "p6", "name": "Casey", "statement": "A lower-income exemption could make the policy fairer."}
+    {"id": "p6", "name": "Casey", "statement": "A lower-income exemption could make the policy fairer."},
+    {"id": "p7", "name": "Wen", "statement": "I have multiple sclerosis. ADA-reserved parking has to stay accessible regardless of fee structure. Don't price disabled students out."},
+    {"id": "p8", "name": "Arjun", "statement": "I'm an international student on F-1 status. I can't legally drive without a state license. Better transit helps people in my situation more than parking ever does."},
+    {"id": "p9", "name": "Professor Whitcomb", "statement": "I commute 45 minutes from a town with no bus service. Until transit reaches faculty in suburban districts, parking is the only option."},
+    {"id": "p10", "name": "Aaliyah", "statement": "I work nights as a CNA and take morning classes. I need my car. A blanket fee hike punishes working students with no flexibility."},
+    {"id": "p11", "name": "Diego", "statement": "I'm on the rowing team. We have 5 AM practice with equipment. No bus runs that early. Athletes can't function on a transit-only campus."},
+    {"id": "p12", "name": "Grandma Nettie", "statement": "I'm an adult learner — 64 years old, finishing the degree I started decades ago. Walking long distances from far lots after evening class isn't safe for me."}
   ]
 }
