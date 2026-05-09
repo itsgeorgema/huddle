@@ -6,29 +6,30 @@ export default function Home() {
       <div className="shell narrow">
         <section className="hero">
           <div className="hero-copy stack">
-            <p className="eyebrow">Civic deliberation infrastructure</p>
-            <h1>Huddle</h1>
-            <p>
+            <p className="eyebrow anim-up" data-anim-index="1">Civic deliberation infrastructure</p>
+            <h1 className="anim-up" data-anim-index="2">Huddle</h1>
+            <p className="anim-up" data-anim-index="3">
               A neutral routing cockpit for public discussion: extract claims, detect tensions, map the graph, and
               assemble balanced rooms without hiding the reasoning trail.
             </p>
-            <div className="row">
-              <Link className="button" href="/demo">
-                Open demo cockpit
-              </Link>
-              <a className="button secondary" href="#process">
-                View process
-              </a>
+            <div className="row anim-up" data-anim-index="4">
+              <Link className="button" href="/demo">Open demo cockpit</Link>
+              <a className="button secondary" href="/#process">View process</a>
             </div>
           </div>
-          <div className="hero-docket">
+
+          <div className="hero-docket anim-up" data-anim-index="5">
             <div className="document-stack">
               <div className="docket-card secondary">
                 <p className="eyebrow">Conflict graph</p>
                 <div className="docket-line" />
-                <p className="muted">Participant nodes connect through claim edges, topic proximity, and tension weight.</p>
+                <p className="muted">
+                  Participant nodes connect through claim edges, topic proximity, and tension weight.
+                </p>
                 <div className="docket-line" />
-                <p className="muted">Grouping rules preserve viewpoint diversity while lowering room volatility.</p>
+                <p className="muted">
+                  Grouping rules preserve viewpoint diversity while lowering room volatility.
+                </p>
               </div>
               <div className="docket-card">
                 <div className="spread">
@@ -69,14 +70,26 @@ export default function Home() {
           </div>
           <div className="grid scenario-grid">
             {[
-              ["Extract", "Convert public comments into normalized claims and speaker context."],
-              ["Map", "Build a conflict graph that shows agreement, friction, and topic adjacency."],
-              ["Balance", "Score pair risk, diversity, and bridge capacity before assigning groups."]
-            ].map(([title, description]) => (
-              <article className="panel scenario-card" key={title}>
-                <p className="eyebrow">{title}</p>
-                <h3>{description}</h3>
-                <span className="badge">Audit-ready</span>
+              { title: "Extract", description: "Convert public comments into normalized claims and speaker context.", step: "01" },
+              { title: "Map", description: "Build a conflict graph that shows agreement, friction, and topic adjacency.", step: "02" },
+              { title: "Balance", description: "Score pair risk, diversity, and bridge capacity before assigning groups.", step: "03" }
+            ].map(({ title, description, step }) => (
+              <article
+                className="panel scenario-card anim-up"
+                key={title}
+                data-step={step}
+                data-anim-index={String(Number(step) + 5)}
+              >
+                <div>
+                  <p className="eyebrow">{title}</p>
+                  <h3>{description}</h3>
+                </div>
+                <div className="spread" style={{ marginTop: "0.75rem" }}>
+                  <span className="badge">Audit-ready</span>
+                  <span className="muted" style={{ fontFamily: "var(--mono)", fontSize: "0.72rem" }}>
+                    Stage {step}
+                  </span>
+                </div>
               </article>
             ))}
           </div>

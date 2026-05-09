@@ -6,13 +6,25 @@ import { api } from "@/lib/api";
 import type { Brief, GraphResponse, Group, Participant, PipelineStep, RiskRow } from "@/lib/types";
 import { ConflictGraph } from "./ConflictGraph";
 
-const stages = [
-  "Intake",
-  "Claim extraction",
-  "Conflict graph",
-  "Load balancing",
-  "Mediation briefs"
-];
+const stages = ["Intake", "Claim extraction", "Conflict graph", "Load balancing", "Mediation briefs"];
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    const observer = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.setAttribute("data-visible", "");
+            observer.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.06, rootMargin: "0px 0px -24px 0px" }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+}
 
 export function SessionDashboard({ sessionId }: { sessionId: string }) {
   const [steps, setSteps] = useState<PipelineStep[]>([]);
@@ -28,6 +40,8 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   const [simulating, setSimulating] = useState(false);
   const [showAllParticipants, setShowAllParticipants] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  useReveal();
 
   useEffect(() => {
     let active = true;
@@ -65,14 +79,14 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   }, [sessionId, refreshKey]);
 
   const participantNames = useMemo(
-    () => Object.fromEntries(participants.map((participant) => [participant.id, participant.display_name])),
+    () => Object.fromEntries(participants.map((p) => [p.id, p.display_name])),
     [participants]
   );
-  const briefsByGroup = useMemo(() => Object.fromEntries(briefs.map((brief) => [brief.group_id, brief])), [briefs]);
-  const conflictEdges = graph?.edges.filter((edge) => edge.type === "conflicts_with").length ?? 0;
-  const averageRisk = risk.length ? risk.reduce((total, row) => total + row.risk_score, 0) / risk.length : 0;
-  const completedSteps = steps.filter((step) => step.status === "complete").length;
-  const bridgeAverage = groups.length ? groups.reduce((total, group) => total + group.bridge_score, 0) / groups.length : 0;
+  const briefsByGroup = useMemo(() => Object.fromEntries(briefs.map((b) => [b.group_id, b])), [briefs]);
+  const conflictEdges = graph?.edges.filter((e) => e.type === "conflicts_with").length ?? 0;
+  const averageRisk = risk.length ? risk.reduce((t, r) => t + r.risk_score, 0) / risk.length : 0;
+  const completedSteps = steps.filter((s) => s.status === "complete").length;
+  const bridgeAverage = groups.length ? groups.reduce((t, g) => t + g.bridge_score, 0) / groups.length : 0;
 
   async function simulate() {
     setSimulating(true);
@@ -97,22 +111,19 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
         </div>
         <section className="hero compact">
           <div className="hero-copy">
-            <p className="eyebrow">Public deliberation docket</p>
-            <h1>Huddle</h1>
-            <p>
+            <p className="eyebrow anim-up" data-anim-index="1">Public deliberation docket</p>
+            <h1 className="anim-up" data-anim-index="2">Huddle</h1>
+            <p className="anim-up" data-anim-index="3">
               Conflict-aware load balancing for civic discussions, with the analysis trail visible from intake to
               group assignment.
             </p>
-            <div className="row">
-              <a className="button" href="#routing">
-                Review group routing
-              </a>
-              <a className="button secondary" href="#graph">
-                Inspect conflict graph
-              </a>
+            <div className="row anim-up" data-anim-index="4">
+              <a className="button" href="#routing">Review group routing</a>
+              <a className="button secondary" href="#graph">Inspect conflict graph</a>
             </div>
           </div>
-          <div className="panel dark stack">
+
+          <div className="panel dark stack anim-up" data-anim-index="5">
             <p className="eyebrow">Session record</p>
             <div className="stat-grid">
               <Metric value={participants.length} label="Participants" />
@@ -123,22 +134,23 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
           </div>
         </section>
 
-        {error && <div className="error-state">{error}</div>}
+        {error && <div className="error-state" data-reveal>{error}</div>}
 
+        {/* Main grid */}
         <section className="grid dashboard-grid">
           <aside className="stack">
-            <div className="panel stack">
+            <div className="panel stack" data-reveal>
               <div>
                 <p className="eyebrow">Analysis process</p>
                 <h2>Pipeline record</h2>
-                <p className="muted">
+                <p className="muted" style={{ fontSize: "0.875rem" }}>
                   Each step is surfaced so users can see how raw statements become claims, conflicts, and groups.
                 </p>
               </div>
               {loading ? <Skeleton count={5} /> : <Pipeline steps={steps} completedSteps={completedSteps} />}
             </div>
 
-            <div className="panel stack">
+            <div className="panel stack" data-reveal>
               <div className="spread">
                 <div>
                   <p className="eyebrow">Participants</p>
@@ -169,13 +181,13 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
           </aside>
 
           <section className="stack">
-            <div className="panel raised stack">
-              <div className="section-head" style={{ marginTop: 0 }}>
+            <div className="panel raised stack" data-reveal>
+              <div className="section-head" style={{ marginTop: 0, marginBottom: "0.25rem" }}>
                 <div>
                   <p className="eyebrow">Decision trail</p>
                   <h2>How the balancing process reads the room</h2>
                 </div>
-                <span className="badge seal">Neutral routing view</span>
+                <span className="badge seal">Neutral routing</span>
               </div>
               <div className="timeline">
                 {stages.map((stage, index) => (
@@ -183,14 +195,14 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
                     <span className="timeline-dot" />
                     <div className="timeline-copy">
                       <h3>{stage}</h3>
-                      <p className="muted">{stageDescription(index)}</p>
+                      <p className="muted" style={{ fontSize: "0.875rem" }}>{stageDescription(index)}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="panel stack">
+            <div className="panel stack" data-reveal>
               <div className="spread">
                 <div>
                   <p className="eyebrow">Live mediation</p>
@@ -199,24 +211,25 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
                 <span className="badge">Session {sessionId.slice(0, 8)}</span>
               </div>
               <label className="stack tight">
-                <span className="muted">Incoming room message</span>
+                <span className="muted" style={{ fontSize: "0.875rem" }}>Incoming room message</span>
                 <textarea rows={4} value={message} onChange={(event) => setMessage(event.target.value)} />
               </label>
               <button className="button" onClick={simulate} disabled={simulating || !message.trim()}>
-                {simulating ? "Reviewing message..." : "Simulate intervention"}
+                {simulating ? "Reviewing message…" : "Simulate intervention"}
               </button>
               {live && (
-                <div className="panel">
+                <div className="panel" data-reveal>
                   <p className="eyebrow">{live.event}</p>
                   <h3>{live.intervention}</h3>
-                  <p className="muted">{live.reason}</p>
+                  <p className="muted" style={{ fontSize: "0.875rem", marginTop: "0.35rem" }}>{live.reason}</p>
                 </div>
               )}
             </div>
           </section>
         </section>
 
-        <section className="section" id="graph">
+        {/* Conflict graph */}
+        <section className="section" id="graph" data-reveal>
           <div className="section-head">
             <div>
               <p className="eyebrow">Conflict graph</p>
@@ -227,8 +240,9 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
           <ConflictGraph graph={graph} />
         </section>
 
+        {/* Risk + groups */}
         <section className="section grid two" id="routing">
-          <div>
+          <div data-reveal>
             <div className="section-head">
               <div>
                 <p className="eyebrow">Risk matrix</p>
@@ -265,7 +279,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
             </div>
           </div>
 
-          <div>
+          <div data-reveal>
             <div className="section-head">
               <div>
                 <p className="eyebrow">Group assignments</p>
@@ -288,8 +302,10 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
                       <Score label="Diversity" value={group.diversity_score} />
                       <Score label="Bridge" value={group.bridge_score} />
                     </div>
-                    <p>{group.participant_ids.map((id) => participantNames[id] || id).join(", ")}</p>
-                    <p className="muted">{group.reasoning}</p>
+                    <p style={{ fontSize: "0.875rem" }}>
+                      {group.participant_ids.map((id) => participantNames[id] || id).join(", ")}
+                    </p>
+                    <p className="muted" style={{ fontSize: "0.875rem" }}>{group.reasoning}</p>
                   </article>
                 ))
               ) : (
@@ -299,7 +315,8 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
           </div>
         </section>
 
-        <section className="section">
+        {/* Mediation briefs */}
+        <section className="section" data-reveal>
           <div className="section-head">
             <div>
               <p className="eyebrow">Mediation briefs</p>
@@ -393,13 +410,13 @@ function Pipeline({ steps, completedSteps }: { steps: PipelineStep[]; completedS
         <div className={`process-step ${step.status === "complete" ? "complete" : "pending"}`} key={step.name}>
           <span className="process-index">{step.status === "complete" ? "OK" : index + 1}</span>
           <div>
-            <strong>{step.name}</strong>
-            {step.error && <p className="muted">{step.error}</p>}
+            <strong style={{ fontSize: "0.9rem" }}>{step.name}</strong>
+            {step.error && <p className="muted" style={{ fontSize: "0.8rem", marginTop: "0.2rem" }}>{step.error}</p>}
           </div>
           <span className="latency">{step.latency_ms ? `${Math.round(step.latency_ms)}ms` : "queued"}</span>
         </div>
       ))}
-      <p className="muted">
+      <p className="muted" style={{ fontSize: "0.8rem" }}>
         {completedSteps} of {steps.length} stages complete.
       </p>
     </div>
@@ -419,7 +436,7 @@ function Score({ label, value }: { label: string; value: number }) {
   return (
     <div className="score-box">
       <strong>{formatScore(value)}</strong>
-      <span className="muted">{label}</span>
+      <span className="muted" style={{ fontSize: "0.78rem" }}>{label}</span>
     </div>
   );
 }
@@ -427,7 +444,7 @@ function Score({ label, value }: { label: string; value: number }) {
 function List({ title, items }: { title: string; items: string[] }) {
   return (
     <div>
-      <strong>{title}</strong>
+      <strong style={{ fontSize: "0.875rem" }}>{title}</strong>
       <ul className="brief-list">
         {items.map((item) => (
           <li key={item}>{item}</li>
@@ -441,7 +458,10 @@ function Skeleton({ count }: { count: number }) {
   return (
     <div className="stack tight skeleton" aria-label="Loading">
       {Array.from({ length: count }).map((_, index) => (
-        <div className={`skeleton-line ${index % 3 === 0 ? "short" : index % 2 === 0 ? "medium" : ""}`} key={index} />
+        <div
+          className={`skeleton-line ${index % 3 === 0 ? "short" : index % 2 === 0 ? "medium" : ""}`}
+          key={index}
+        />
       ))}
     </div>
   );
@@ -452,12 +472,11 @@ function formatScore(value: number) {
 }
 
 function stageDescription(index: number) {
-  const descriptions = [
+  return [
     "Statements enter the public record with speaker context preserved.",
     "Claims are extracted and normalized before graph construction.",
     "Edges reveal agreement, tension, and topic proximity across the room.",
     "The balancer tests risk, viewpoint diversity, and bridge capacity.",
     "Each group receives facilitation notes for a more structured discussion."
-  ];
-  return descriptions[index];
+  ][index];
 }
