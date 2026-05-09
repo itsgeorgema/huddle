@@ -27,14 +27,13 @@ services:
     ports:
       - "8001:8001"
     environment:
-      - DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/huddle
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
       - CELERY_ALWAYS_EAGER=false
       - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
     depends_on:
-      - db
       - redis
 
   worker:
@@ -43,13 +42,12 @@ services:
       dockerfile: apps/agents/Dockerfile
     command: celery -A app.workers.celery_app worker --loglevel=info
     environment:
-      - DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/huddle
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
       - CELERY_ALWAYS_EAGER=false
     depends_on:
-      - db
       - redis
 
   db:
