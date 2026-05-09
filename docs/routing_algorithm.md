@@ -1,6 +1,6 @@
 # Routing Algorithm
 
-The routing engine implements a greedy deliberation load balancer.
+The routing engine is invoked by the LangGraph `diversity_load_balancer` agent node.
 
 Inputs:
 
@@ -18,4 +18,4 @@ Process:
 4. Score each group for conflict risk, diversity, bridge coverage, and minority isolation.
 5. Persist explainable group reasoning.
 
-The current implementation favors transparent heuristics over black-box optimization. It can later be replaced with OR-Tools or scipy optimization while preserving the API contract.
+The current implementation favors transparent heuristics over black-box optimization. It can later be replaced with OR-Tools or scipy optimization while preserving the API contract. If routing becomes latency-sensitive or high-throughput, this module is the extraction point for a Go routing service.

@@ -25,7 +25,6 @@ export const api = {
     request<{ status: string }>(`/api/sessions/${sessionId}/analyze`, {
       method: "POST",
       body: JSON.stringify({
-        mode: "mock",
         group_size: groupSize,
         constraints: { protect_minority_views: true, require_bridge_participants: true, max_group_risk: 0.75 }
       })

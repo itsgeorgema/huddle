@@ -15,9 +15,22 @@ services:
     ports:
       - "8000:8000"
     environment:
+      - AGENTS_URL=http://agents:8001
+      - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+    depends_on:
+      - agents
+
+  agents:
+    build:
+      context: .
+      dockerfile: apps/agents/Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
       - DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/huddle
       - REDIS_URL=redis://redis:6379/0
-      - LLM_MODE=mock
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
       - CELERY_ALWAYS_EAGER=false
       - CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
     depends_on:
@@ -27,12 +40,13 @@ services:
   worker:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      dockerfile: apps/agents/Dockerfile
     command: celery -A app.workers.celery_app worker --loglevel=info
     environment:
       - DATABASE_URL=postgresql+psycopg://postgres:postgres@db:5432/huddle
       - REDIS_URL=redis://redis:6379/0
-      - LLM_MODE=mock
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
       - CELERY_ALWAYS_EAGER=false
     depends_on:
       - db
@@ -61,7 +75,7 @@ services:
     volumes:
       - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
-      - api
+      - agents
 
   grafana:
     image: grafana/grafana:11.0.0

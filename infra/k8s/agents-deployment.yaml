@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: huddle-worker
+  name: huddle-agents
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: huddle-worker
+      app: huddle-agents
   template:
     metadata:
       labels:
-        app: huddle-worker
+        app: huddle-agents
     spec:
       containers:
-        - name: worker
+        - name: agents
           image: huddle-agents:latest
-          command: ["celery", "-A", "app.workers.celery_app", "worker", "--loglevel=info"]
+          ports:
+            - containerPort: 8001

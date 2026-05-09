@@ -33,8 +33,8 @@ export default function DemoPage() {
   return (
     <main className="shell stack">
       <section className="panel stack">
-        <h1>Demo Cockpit</h1>
-        <p className="muted">Load a scenario and run the mock agent pipeline end to end.</p>
+        <h1>Huddle</h1>
+        <p className="muted">Load a scenario and run the AI deliberation pipeline end to end.</p>
         <div className="row">
           <select value={selected} onChange={(event) => setSelected(event.target.value)}>
             {scenarios.map((scenario) => (
