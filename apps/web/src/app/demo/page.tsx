@@ -132,8 +132,8 @@ export default function DemoPage() {
       <div className="shell stack">
         <section className="hero compact">
           <div className="hero-copy">
-            <p className="eyebrow anim-up" data-anim-index="1">Demo cockpit</p>
-            <h1 className="anim-up" data-anim-index="2">Stress-test a decision</h1>
+            <p className="eyebrow anim-up" data-anim-index="1">Deliberation engine</p>
+            <h1 className="anim-up" data-anim-index="2">Balance the room</h1>
             <p className="anim-up" data-anim-index="3">
               Pick how you want to seed Huddle: walk through a pre-built civic scenario, or describe your own
               conflict and bring real personas, AI-generated personas, or a mix of both.
