@@ -39,6 +39,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
   const [simulating, setSimulating] = useState(false);
   const [agentRuns, setAgentRuns] = useState<AgentRun[]>([]);
   const [showAllParticipants, setShowAllParticipants] = useState(false);
+  const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useReveal();
@@ -147,7 +148,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
               {loading ? <Skeleton count={5} /> : <Pipeline steps={steps} completedSteps={completedSteps} />}
             </div>
 
-            <div className="panel stack" data-reveal>
+            <div className="panel stack participants-panel" data-reveal>
               <div className="spread">
                 <div>
                   <p className="eyebrow">Participants</p>
@@ -161,15 +162,21 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
                 <>
                   <div className="participant-list">
                     {participants.slice(0, 8).map((participant, index) => (
-                      <div className="participant-chip" key={participant.id}>
+                      <button
+                        className="participant-chip"
+                        key={participant.id}
+                        onClick={() => setSelectedParticipant(participant)}
+                      >
                         <span className="node-dot">{index + 1}</span>
                         <span>{participant.display_name}</span>
-                      </div>
+                      </button>
                     ))}
                   </div>
-                  <button className="button secondary" onClick={() => setShowAllParticipants(true)}>
-                    Show all participants
-                  </button>
+                  {participants.length > 8 && (
+                    <button className="button secondary" onClick={() => setShowAllParticipants(true)}>
+                      Show all participants
+                    </button>
+                  )}
                 </>
               ) : (
                 <div className="empty-state">No participants are attached to this session.</div>
@@ -199,7 +206,7 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
               </div>
             </div>
 
-            <div className="panel stack" data-reveal>
+            <div className="panel stack intervention-panel" data-reveal>
               <div className="spread">
                 <div>
                   <p className="eyebrow">Live mediation</p>
@@ -366,6 +373,30 @@ export function SessionDashboard({ sessionId }: { sessionId: string }) {
           )}
         </section>
       </div>
+
+      {selectedParticipant && (
+        <div className="modal-backdrop" onClick={() => setSelectedParticipant(null)}>
+          <div className="modal-panel panel stack" onClick={(e) => e.stopPropagation()}>
+            <div className="spread">
+              <div>
+                <p className="eyebrow">Participant record</p>
+                <h2 style={{ margin: 0 }}>{selectedParticipant.display_name}</h2>
+              </div>
+              <button className="button secondary" onClick={() => setSelectedParticipant(null)}>
+                Close
+              </button>
+            </div>
+            <div>
+              <p className="eyebrow" style={{ marginBottom: "0.6rem" }}>Loaded statement</p>
+              {selectedParticipant.statement ? (
+                <p style={{ lineHeight: 1.75, color: "var(--ink-soft)" }}>{selectedParticipant.statement}</p>
+              ) : (
+                <p className="muted">No statement recorded for this participant.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {showAllParticipants && (
         <div

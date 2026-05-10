@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import type { Scenario } from "@/lib/types";
+import type { Scenario, ScenarioParticipant } from "@/lib/types";
 
 const PIPELINE_MESSAGES = [
   "Loading scenario into the public record…",
@@ -57,6 +57,7 @@ export default function DemoPage() {
   const [error, setError] = useState<string | null>(null);
   const [msgIndex, setMsgIndex] = useState(0);
   const [msgVisible, setMsgVisible] = useState(true);
+  const [previewParticipant, setPreviewParticipant] = useState<ScenarioParticipant | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [conflictText, setConflictText] = useState("");
@@ -217,12 +218,29 @@ export default function DemoPage() {
                       ))}
                     </select>
                   </label>
-                  {selectedScenario?.description && (
-                    <p className="muted" style={{ fontSize: "0.875rem" }}>
-                      {selectedScenario.description}
-                    </p>
-                  )}
-                  {!selectedScenario && (
+                  {selectedScenario ? (
+                    <>
+                      <p className="muted" style={{ fontSize: "0.875rem" }}>
+                        {selectedScenario.description}
+                      </p>
+                      <div className="scenario-participants-preview">
+                        <p className="eyebrow" style={{ marginBottom: "0.5rem" }}>
+                          {selectedScenario.participant_count} participants
+                        </p>
+                        <div className="scenario-participant-chips">
+                          {selectedScenario.participants.map((p) => (
+                            <button
+                              key={p.name}
+                              className="scenario-participant-chip"
+                              onClick={() => setPreviewParticipant(p)}
+                            >
+                              {p.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
                     <p className="muted" style={{ fontSize: "0.875rem" }}>Choose a scenario to start the pipeline.</p>
                   )}
                 </>
@@ -243,11 +261,30 @@ export default function DemoPage() {
                     data-step={String(i + 1).padStart(2, "0")}
                   >
                     <div>
-                      <p className="eyebrow">{selected === scenario.id ? "Selected" : "Scenario"}</p>
+                      <div className="spread" style={{ marginBottom: "0.5rem" }}>
+                        <p className="eyebrow">{selected === scenario.id ? "Selected" : "Scenario"}</p>
+                        <span className="badge">{scenario.participant_count} participants</span>
+                      </div>
                       <h3>{scenario.title}</h3>
                       <p className="muted" style={{ fontSize: "0.875rem", marginTop: "0.35rem" }}>
                         {scenario.description}
                       </p>
+                      <div className="scenario-participant-chips" style={{ marginTop: "0.75rem" }}>
+                        {scenario.participants.slice(0, 6).map((p) => (
+                          <button
+                            key={p.name}
+                            className="scenario-participant-chip"
+                            onClick={(e) => { e.stopPropagation(); setPreviewParticipant(p); }}
+                          >
+                            {p.name}
+                          </button>
+                        ))}
+                        {scenario.participant_count > 6 && (
+                          <span className="scenario-participant-chip muted">
+                            +{scenario.participant_count - 6} more
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <button
                       className="button secondary"
@@ -347,6 +384,23 @@ export default function DemoPage() {
           </section>
         )}
       </div>
+
+      {previewParticipant && (
+        <div className="modal-backdrop" onClick={() => setPreviewParticipant(null)}>
+          <div className="modal-panel panel stack" onClick={(e) => e.stopPropagation()}>
+            <div className="spread">
+              <div>
+                <p className="eyebrow">Participant statement</p>
+                <h2 style={{ margin: 0 }}>{previewParticipant.name}</h2>
+              </div>
+              <button className="button secondary" onClick={() => setPreviewParticipant(null)}>
+                Close
+              </button>
+            </div>
+            <p style={{ lineHeight: 1.75, color: "var(--ink-soft)" }}>{previewParticipant.statement}</p>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
