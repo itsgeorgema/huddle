@@ -193,7 +193,7 @@ export default function DemoPage() {
               </p>
             </div>
 
-            <div className="panel dark stack anim-up" data-anim-index="4">
+            <div className="panel dark stack anim-up" data-anim-index="4" style={{ marginBottom: "2rem" }}>
               <p className="eyebrow">Analyze a record</p>
               {loading ? (
                 <div className="pipeline-log">
