@@ -807,6 +807,57 @@ tbody tr:hover {
 
 /* ── Participant List ───────────────────────────────────────────────────── */
 
+/* ── Scenario participant chips (demo page) ─────────────────────────────── */
+
+.scenario-participants-preview {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 0.85rem;
+}
+
+.scenario-participant-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.scenario-participant-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.7);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.scenario-participant-chip:hover {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.panel.dark .scenario-participant-chips {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.panel.dark .scenario-participant-chip {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 250, 241, 0.75);
+}
+
+.panel.dark .scenario-participant-chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 250, 241, 1);
+}
+
+/* ── Participant list (session dashboard) ───────────────────────────────── */
+
 .participant-list {
   display: grid;
   gap: 0.42rem;

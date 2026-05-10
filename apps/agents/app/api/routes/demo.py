@@ -27,7 +27,17 @@ def scenarios() -> list[dict]:
     output = []
     for path in sorted(DATA_DIR.glob("*.json")):
         data = json.loads(path.read_text())
-        output.append({"id": path.stem, "title": data["title"], "description": data["description"]})
+        participants = data.get("participants", [])
+        output.append({
+            "id": path.stem,
+            "title": data["title"],
+            "description": data["description"],
+            "participant_count": len(participants),
+            "participants": [
+                {"name": p["name"], "statement": p["statement"]}
+                for p in participants
+            ],
+        })
     return output
 
 

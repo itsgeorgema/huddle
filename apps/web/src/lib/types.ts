@@ -1,7 +1,14 @@
+export type ScenarioParticipant = {
+  name: string;
+  statement: string;
+};
+
 export type Scenario = {
   id: string;
   title: string;
   description: string;
+  participant_count: number;
+  participants: ScenarioParticipant[];
 };
 
 export type Session = {
