@@ -7,6 +7,13 @@
     {"id": "p3", "name": "Mina", "statement": "Teachers need a clear policy because enforcement is inconsistent."},
     {"id": "p4", "name": "Eli", "statement": "The school should not punish students who need accessibility tools."},
     {"id": "p5", "name": "Fern", "statement": "Parents do not trust the district to handle emergencies well."},
-    {"id": "p6", "name": "Theo", "statement": "Maybe phones can be stored during class but available during lunch."}
+    {"id": "p6", "name": "Theo", "statement": "Maybe phones can be stored during class but available during lunch."},
+    {"id": "p7", "name": "Ms. Okonkwo", "statement": "I've taught middle school for 22 years. Phones in pockets aren't the problem — adults handing them to 11-year-olds without limits is. A school ban without a parent-side conversation just shifts the conflict."},
+    {"id": "p8", "name": "Yuki", "statement": "I'm a Type 1 diabetic. My continuous glucose monitor sends alerts to my phone. A blanket ban would put my health at risk. Carve-outs need to be specific, not optional."},
+    {"id": "p9", "name": "Marcus", "statement": "I'm a senior. My family doesn't have wi-fi at home. I do half my homework on my phone using mobile data during free periods. Banning it just means I fall behind."},
+    {"id": "p10", "name": "Sister Ana", "statement": "I work in a parish after-school program. The bigger issue is what kids do with phones at home — porn, bullying, sleep loss. School is a small slice of the day."},
+    {"id": "p11", "name": "Reza", "statement": "I'm a working dad with two kids in middle school. I need to text my daughter about pickup changes. A ban is fine if there's a school-approved messaging system that actually works."},
+    {"id": "p12", "name": "Jordan", "statement": "I'm a queer freshman. My phone is how I stay in touch with my support community. Some kids' phones are a lifeline, not a distraction."},
+    {"id": "p13", "name": "Mr. Bradshaw", "statement": "I'm the school resource officer. I can tell you a lockdown drill works better when students aren't filming or pranking. There's a real safety reason to limit phones during structured time."}
   ]
 }
